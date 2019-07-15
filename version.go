@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const SemVerRegExpRaw string = `([0-9]+(\.[0-9]+)*?)` +
+const SemVerRegExpRaw string = `v?([0-9]+(\.[0-9]+)*?)` +
 	`(-([0-9]+[0-9A-Za-z\-~]*(\.[0-9A-Za-z\-~]+)*)|(-([A-Za-z\-~]+[0-9A-Za-z\-~]*(\.[0-9A-Za-z\-~]+)*)))?` +
 	`(\+([0-9A-Za-z\-~]+(\.[0-9A-Za-z\-~]+)*))?` +
 	`?`
@@ -38,7 +38,7 @@ func (v *Version) String() string {
 }
 
 func (v *Version) prettyString() (version string) {
-	version = fmt.Sprintf("%v.%v.%v", v.major, v.minor, v.patch)
+	version = fmt.Sprintf("v%v.%v.%v", v.major, v.minor, v.patch)
 
 	if v.identifier != "" {
 		version = fmt.Sprintf("%s (%s)", version, v.identifier)
@@ -66,7 +66,7 @@ func (v *Version) prettyString() (version string) {
 }
 
 func (v *Version) string() (version string) {
-	version = fmt.Sprintf("%v.%v.%v", v.major, v.minor, v.patch)
+	version = fmt.Sprintf("v%v.%v.%v", v.major, v.minor, v.patch)
 
 	if v.identifier != "" {
 		version = fmt.Sprintf("%s-%s", version, v.identifier)

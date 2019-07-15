@@ -20,7 +20,7 @@ func TestVersion_String(t *testing.T) {
 				identifier: "alpha2.0",
 				metadata:   "20190715-a3dc5s",
 			},
-			want: "1.2.3-alpha2.0+20190715-a3dc5s",
+			want: "v1.2.3-alpha2.0+20190715-a3dc5s",
 		},
 		{
 			name: "test string pretty 1",
@@ -32,7 +32,7 @@ func TestVersion_String(t *testing.T) {
 				metadata:   "20190715-a3dc5s",
 				PrettyPrint: true,
 			},
-			want: "1.2.3 (alpha2.0) (2019-07-15 a3dc5s)",
+			want: "v1.2.3 (alpha2.0) (2019-07-15 a3dc5s)",
 		},
 		{
 			name: "test string pretty 2",
@@ -44,7 +44,7 @@ func TestVersion_String(t *testing.T) {
 				metadata:   "a3dc5s-20190715",
 				PrettyPrint: true,
 			},
-			want: "1.2.3 (alpha2.0) (2019-07-15 a3dc5s)",
+			want: "v1.2.3 (alpha2.0) (2019-07-15 a3dc5s)",
 		},
 		{
 			name: "test string pretty 3",
@@ -56,7 +56,7 @@ func TestVersion_String(t *testing.T) {
 				metadata:   "a3dc5s",
 				PrettyPrint: true,
 			},
-			want: "1.2.3 (alpha2.0) (a3dc5s)",
+			want: "v1.2.3 (alpha2.0) (a3dc5s)",
 		},
 	}
 	for _, tt := range tests {
@@ -111,7 +111,7 @@ func TestNewVersion(t *testing.T) {
 		{
 			name: "test constructor 4",
 			args: args{
-				"v5-1",
+				"z5-1",
 			},
 			wantErr: true,
 		},
