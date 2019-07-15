@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const VersionRegExpRaw string = `([0-9]+(\.[0-9]+)*?)` +
+const SemVerRegExpRaw string = `([0-9]+(\.[0-9]+)*?)` +
 	`(-([0-9]+[0-9A-Za-z\-~]*(\.[0-9A-Za-z\-~]+)*)|(-([A-Za-z\-~]+[0-9A-Za-z\-~]*(\.[0-9A-Za-z\-~]+)*)))?` +
 	`(\+([0-9A-Za-z\-~]+(\.[0-9A-Za-z\-~]+)*))?` +
 	`?`
@@ -16,7 +16,7 @@ const VersionRegExpRaw string = `([0-9]+(\.[0-9]+)*?)` +
 var versionRegExp *regexp.Regexp
 
 func init() {
-	versionRegExp = regexp.MustCompile("^" + VersionRegExpRaw + "$")
+	versionRegExp = regexp.MustCompile("^" + SemVerRegExpRaw + "$")
 }
 
 type Version struct {
@@ -27,8 +27,8 @@ type Version struct {
 	metadata   string
 }
 
-func (v *Version) String() string {
-	version := fmt.Sprintf("%v.%v.%v", v.major, v.minor, v.patch)
+func (v *Version) String() (version string) {
+	version = fmt.Sprintf("%v.%v.%v", v.major, v.minor, v.patch)
 
 	if v.identifier != "" {
 		version = fmt.Sprintf("%s-%s", version, v.identifier)
@@ -38,7 +38,8 @@ func (v *Version) String() string {
 		version = fmt.Sprintf("%s+%s", version, v.metadata)
 	}
 
-	return version
+	return
+
 }
 
 func NewVersion(v string) (*Version, error) {
@@ -66,11 +67,16 @@ func NewVersion(v string) (*Version, error) {
 		versionSegmentInt = append(versionSegmentInt, 0)
 	}
 
+	pre := matches[7]
+	if pre == "" {
+		pre = matches[4]
+	}
+
 	return &Version{
 		major:      versionSegmentInt[0],
 		minor:      versionSegmentInt[1],
 		patch:      versionSegmentInt[2],
-		identifier: matches[7],
+		identifier: pre,
 		metadata:   matches[10],
 	}, nil
 }
