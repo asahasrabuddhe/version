@@ -16,12 +16,14 @@ var v *version.Version
 // the package ensures that the version used follows semver spec
 v = version.NewVersion("1.2.3-alpha2.0+201907015-e3fef0c")
 
-fmt.Println(v)
-
+log.Println(v)
+// prints 1.2.3-alpha2.0+201907015-e3fef0c
 
 // or 
 
-log.Println(v)
+v.PrettyPrint = true
+fmt.Println(v)
+// prints 1.2.3 (alpha2.0) (201907015 e3fef0c)
 ```
 
 # Contributing

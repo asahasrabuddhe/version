@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const SemVerRegExpRaw string = `([0-9]+(\.[0-9]+)*?)` +
@@ -20,14 +21,51 @@ func init() {
 }
 
 type Version struct {
-	major      int64
-	minor      int64
-	patch      int64
-	identifier string
-	metadata   string
+	major       int64
+	minor       int64
+	patch       int64
+	identifier  string
+	metadata    string
+	PrettyPrint bool
 }
 
-func (v *Version) String() (version string) {
+func (v *Version) String() string {
+	if v.PrettyPrint {
+		return v.prettyString()
+	} else {
+		return v.string()
+	}
+}
+
+func (v *Version) prettyString() (version string) {
+	version = fmt.Sprintf("%v.%v.%v", v.major, v.minor, v.patch)
+
+	if v.identifier != "" {
+		version = fmt.Sprintf("%s (%s)", version, v.identifier)
+	}
+
+	if v.metadata != "" {
+		meta := strings.Split(v.metadata, "-")
+
+		if len(meta) == 2 {
+			// try to parse two components for date and git commit hash
+			if t, err := time.Parse("20060102", meta[0]); err == nil {
+				version = fmt.Sprintf("%s (%s %s)", version, t.Format("2006-01-02"), meta[1])
+				return
+			} else if t, err := time.Parse("20060102", meta[1]); err == nil {
+				version = fmt.Sprintf("%s (%s %s)", version, t.Format("2006-01-02"), meta[0])
+				return
+			}
+		}
+
+		// print meta as it is
+		version = fmt.Sprintf("%s (%s)", version, v.metadata)
+	}
+
+	return
+}
+
+func (v *Version) string() (version string) {
 	version = fmt.Sprintf("%v.%v.%v", v.major, v.minor, v.patch)
 
 	if v.identifier != "" {
@@ -39,7 +77,6 @@ func (v *Version) String() (version string) {
 	}
 
 	return
-
 }
 
 func NewVersion(v string) (*Version, error) {
